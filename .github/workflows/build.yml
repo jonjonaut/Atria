@@ -28,11 +28,9 @@ jobs:
 
       - name: Setup Theos
         run: |
-          git clone --recursive https://github.com/theos/theos ~/theos
+          git clone --depth 1 --recursive https://github.com/theos/theos ~/theos
           cd ~/theos
           curl -sSL https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS16.5.sdk.tar.xz | tar -xJv -C ~/theos/sdks
-          chmod +x ./bin/install-theos
-          ./bin/install-theos
 
       - name: Build deb
         run: |
