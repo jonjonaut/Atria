@@ -36,7 +36,7 @@ jobs:
         run: |
           export THEOS=~/theos THEOS_PACKAGE_SCHEME=rootless
           cd main
-          "$(brew --prefix make)/bin/gmake" clean package FINALPACKAGE=1
+          "$(brew --prefix make)/bin/gmake" clean package SYSROOT=$THEOS/sdks/iPhoneOS16.5.sdk FINALPACKAGE=1
 
       - uses: actions/upload-artifact@v4
         with:
