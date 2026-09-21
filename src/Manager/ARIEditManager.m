@@ -25,16 +25,61 @@
     return manager;
 }
 
+- (UIWindow *)_atriaActiveWindow {
+	UIApplication *application = [UIApplication sharedApplication];
+	
+	for (UIScene *scene in application.connectedScenes) {
+		if (![scene isKindOfClass:[UIWindowScene class]]) continue;
+		UIWindowScene *windowScene = (UIWindowScene *)scene;
+		if (windowScene.activationState != UISceneActivationStateForegroundActive) continue;
+
+		for (UIWindow *window in windowScene.windows) {
+			if (window.isKeyWindow && window.rootViewController) {
+				return window;
+			}
+		}
+	}
+
+
+	for (UIWindow *window in application.windows) {
+		if(window.isKeyWindow && window.rootViewController) {
+			return window;
+		}
+	}
+
+	return nil;
+}
+
+- (UIViewController *)_atriaPresentationController {
+	UIWindow *window = [self _atriaActiveWindow];
+	UIViewController *controller = window.rootViewController;
+
+	if (!controller) return nil;
+
+	while (controller.presentedViewController) {
+		controller = controller.presentedViewController;
+	}
+	
+	return controller;
+}
+
 // Edit helper
 
 - (void)toggleEditView:(BOOL)toggle withTargetLocation:(NSString *)targetLoc {
     if(toggle) {
         // Start edit
         if(_isEditing) return;
-        _isEditing = YES;
-        _editingLocation = targetLoc;
+        
+	UIWindow *window = [self _atriaActiveWindow];
+	UIView *containerView = window.rootViewController.view;
 
-        UIViewController *iconController = (UIViewController *)[objc_getClass("SBIconController") sharedInstance];
+	if (!containerView) {
+		NSLog(@"[Atria] Cannot open editor: no valid SpringBoard container view");
+		return;
+	}
+
+	_isEditing = YES;
+        _editingLocation = targetLoc;
 
         // Check if this list view has custom config
         _current = [[ARITweakManager sharedInstance] currentListView];
@@ -48,9 +93,9 @@
         ARIEditingMainView *view = [[ARIEditingMainView alloc] initWithTarget:targetLoc];
         view.alpha = 0.0F;
         view.transform = CGAffineTransformMakeScale(0.25F, 0.25F);
-        [iconController.view addSubview:view];
+        [containerView addSubview:view];
         [NSLayoutConstraint activateConstraints:@[
-            [view.centerXAnchor constraintEqualToAnchor:iconController.view.centerXAnchor],
+            [view.centerXAnchor constraintEqualToAnchor:containerView.centerXAnchor],
         ]];
 
         [UIView animateWithDuration:0.2f
@@ -107,12 +152,20 @@
     if([manager boolValueForKey:@"showBackground"]) {
         [alert addAction:[self _createEditAlertAction:@"Background Blur" editLocation:@"blur"]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                              style:UIAlertActionStyleCancel
-                                            handler:^(UIAlertAction *action){
-                                            }]];
+    [alert addAction:[UIAlertAction
+	actionWithTitle:@"Cancel"
+	style:UIAlertActionStyleCancel
+	handler:nil]];
 
-    [[objc_getClass("SBIconController") sharedInstance] presentViewController:alert animated:YES completion:nil];
+    UIViewController *presenter = [self _atriaPresentationController];
+
+    if (!presenter) {
+	NSLog(@"[Atria] Cannot present editor alert: no valid UIViewController");
+	return;
+    }
+
+    [presenter presentViewController:alert animated:YES completion:nil];
+
 }
 
 - (UIAlertAction *)_createEditAlertAction:(NSString *)title editLocation:(NSString *)location {

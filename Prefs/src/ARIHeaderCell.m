@@ -4,7 +4,8 @@
 //
 
 #import "ARIHeaderCell.h"
-
+#define PACKAGE_VERSION "1.4.2"
+#define PACKAGE_TYPE "rootless"
 @implementation ARIHeaderCell {
     UIImageView *_icon;
 }
@@ -30,7 +31,7 @@
         ]];
 
         UILabel *label = [[UILabel alloc] init];
-        label.text = @"Version " PACKAGE_VERSION " (" PACKAGE_TYPE ")";
+        label.text = [NSString stringWithFormat:@"Version %s ( %s )", PACKAGE_VERSION, PACKAGE_TYPE];
         label.numberOfLines = 0;
         label.font = [UIFont systemFontOfSize:14];
         label.textAlignment = NSTextAlignmentCenter;

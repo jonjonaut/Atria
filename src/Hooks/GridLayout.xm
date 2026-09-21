@@ -73,7 +73,10 @@ static struct SBHIconGridSizeClassSizes generateGridSizeClassSizes(double cols, 
 
 - (struct SBHIconGridSize)gridSize {
 	if(!self._atriaLocation) {
-		struct SBHIconGridSize size = { .height = 0x7FFF, .width = 0x7FFF };
+		struct SBHIconGridSize size = { 
+			.height = 0x7FFF,
+			.width = 0x7FFF 
+		 };
 		return size;
 	}
 	// If location is already set, size should have been modified as needed
