@@ -1,6 +1,6 @@
 export THEOS_PACKAGE_SCHEME=rootless
 
-TARGET := iphone:clang:latest:16.5:15.0
+TARGET := iphone:clang:latest:16.5
 INSTALL_TARGET_PROCESSES = SpringBoard
 Atria_LOGOS_DEFAULT_GENERATOR = internal
 
