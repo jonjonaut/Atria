@@ -2,16 +2,16 @@ TARGET := iphone:clang:latest:16.5
 
 include $(THEOS)/makefiles/common.mk
 
-BUNDLE_NAME = Prefs
+BUNDLE_NAME = AtriaPrefs
 
-Prefs_FILES = $(shell find src -type f -name '*.m')
+AtriaPrefs_FILES = $(shell find src -type f -name '*.m')
 
 $(info $(Prefs_FILES))
-Prefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
-Prefs_FRAMEWORKS = UIKit Foundation
-Prefs_PRIVATE_FRAMEWORKS = Preferences
-Prefs_LIBRARIES = colorpicker
-Prefs_INSTALL_PATH = /Library/PreferenceBundles
-Prefs_RESOURCE_DIRS = Resources
+AtriaPrefs_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+AtriaPrefs_FRAMEWORKS = UIKit Foundation
+AtriaPrefs_PRIVATE_FRAMEWORKS = Preferences
+AtriaPrefs_LIBRARIES = colorpicker
+AtriaPrefs_INSTALL_PATH = /Library/PreferenceBundles
+AtriaPrefs_RESOURCE_DIRS = Resources
 
 include $(THEOS_MAKE_PATH)/bundle.mk
